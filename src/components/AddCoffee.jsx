@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import Swal from 'sweetalert2'
+
 const AddCoffee = () => {
 
 
@@ -15,6 +18,26 @@ const AddCoffee = () => {
 
         const newCoffee = {name, quantity, supplier, taste, details, photo, category}
         console.log(newCoffee)
+
+        // send data to server  
+          fetch("http://localhost:5000/coffee", {
+            method: "POST",
+            headers: {'content-type': 'application/json'},
+            body: JSON.stringify(newCoffee)
+
+          })
+          .then(res => res.json())
+          .then(data => {
+            console.log(data)
+            if(data.insertedId){
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Coffee added successfully',
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                  })
+            }
+          })
     }
     return (
         <div className="bg-[#F4F3F0] p-24">
@@ -96,7 +119,9 @@ const AddCoffee = () => {
                     </div>
                 </div>
                 <input className="btn btn-black w-full" type="submit" value="ADD COFFEE" />
+                <Link to='/'><button className="btn btn-success w-full mt-0.5">Back Home</button></Link>
             </form>
+          
         </div>
     );
 };
